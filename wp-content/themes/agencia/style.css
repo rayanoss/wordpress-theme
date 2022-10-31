@@ -1,0 +1,32 @@
+/*
+Theme Name: Agencia
+Text Domain: agencia
+Version: 0.1
+Tested up to: 6.0.3
+Requires at least: 4.7
+Requires PHP: 7.2
+*/
+
+.formatted .blocks-gallery-grid{
+    display: flex;
+    margin-left: 0;
+   
+}
+
+
+.formatted .blocks-gallery-grid li {
+    padding-left: 0; 
+    list-style: none;
+}
+
+.formatted .blocks-gallery-grid li::before {
+    display: none;
+}
+
+.formatted .blocks-gallery-grid li::last-child {
+    margin-bottom: 16px!important;
+}
+
+.formatted .wp-block-buttons{
+    margin-buttom: 1.5em; 
+}
