@@ -1,11 +1,12 @@
 <?php get_header() ?>
+<?php while (have_posts()): the_post() ?>
   <main class="sections">
     <!-- Find your home -->
     <section>
       <div class="container">
         <div class="search-form">
-  <h1 class="search-form__title">Agence immo Montpellier</h1>
-  <p>Retrouver tous nos biens sur le secteur de <strong>Montpellier</strong></p>
+  <h1 class="search-form__title"><?php the_title() ?></h1>
+  <p><?php the_content() ?></p>
   <hr>
   <form action="listing.html" class="search-form__form">
     <div class="search-form__checkbox">
@@ -42,83 +43,38 @@
 </div>
 
       </div>
+      <?php if($property = get_field('highlighted_property')) : ?>
       <div class="highlighted highlighted--home">
-        <img src="https://i.picsum.photos/id/234/790/728.jpg" alt="">
+        <?= get_the_post_thumbnail($property, 'property-thumbnail-home') ?>
         <div class="highlighted__body">
-          <div class="highlighted__title">Maison 4 pièce(s)</div>
-          <div class="highlighted__price">178 200€</div>
-          <div class="highlighted__location">34 000 MONTPELLIER</div>
-          <div class="highlighted__space">80m²</div>
+          <div class="highlighted__title"><?= get_the_title($property) ?></div>
+          <div class="highlighted__price"><?php agence_price($property) ?></div>
+          <div class="highlighted__location"><?php agence_city($property) ?></div>
+          <div class="highlighted__space"><?= the_field('surface', $property) ?>m²</div>
         </div>
       </div>
+      <?php endif ?>
     </section>
 
     <!-- Feature properties -->
+    <?php if (have_rows('recent_properties')): while(have_rows('recent_properties')): the_row() ?>
     <section class="container">
       <div class="push-properties">
-        <div class="push-properties__title">Nos derniers biens</div>
+        <div class="push-properties__title"><?php the_sub_field('title') ?></div>
         <p>
-          Les agences Agencia présente sur Montpellier, Lattes et Palavas vous présentent leurs biens. Vous souhaitez louer ou acheter un appartement dans la zone de Montpellier, Pérols, Carnon ou leurs environ ?
+          <?php the_sub_field('description') ?>
         </p>
         <div class="push-properties__grid">
-          
-            <a class="property " href="single.html" title="Maison 4 pièce(s) - 00m²">
-  <div class="property__image">
-    
-      <img src="https://i.picsum.photos/id/30/385/220.jpg" alt="">
-    
-  </div>
-  <div class="property__body">
-    <div class="property__location">34000 Montpellier</div>
-    <h3 class="property__title">Maison 4 pièce(s) - 10m²</h3>
-    <div class="property__price">45 000 €</div>
-  </div>
-</a>
-
-          
-            <a class="property " href="single.html" title="Maison 4 pièce(s) - 10m²">
-  <div class="property__image">
-    
-      <img src="https://i.picsum.photos/id/31/385/220.jpg" alt="">
-    
-  </div>
-  <div class="property__body">
-    <div class="property__location">34000 Montpellier</div>
-    <h3 class="property__title">Maison 4 pièce(s) - 20m²</h3>
-    <div class="property__price">45 000 €</div>
-  </div>
-</a>
-
-          
-            <a class="property " href="single.html" title="Maison 4 pièce(s) - 20m²">
-  <div class="property__image">
-    
-      <img src="https://i.picsum.photos/id/32/385/220.jpg" alt="">
-    
-  </div>
-  <div class="property__body">
-    <div class="property__location">34000 Montpellier</div>
-    <h3 class="property__title">Maison 4 pièce(s) - 30m²</h3>
-    <div class="property__price">45 000 €</div>
-  </div>
-</a>
-
-          
-            <a class="property " href="single.html" title="Maison 4 pièce(s) - 30m²">
-  <div class="property__image">
-    
-      <img src="https://i.picsum.photos/id/33/385/220.jpg" alt="">
-    
-  </div>
-  <div class="property__body">
-    <div class="property__location">34000 Montpellier</div>
-    <h3 class="property__title">Maison 4 pièce(s) - 40m²</h3>
-    <div class="property__price">45 000 €</div>
-  </div>
-</a>
-
-          
-        </div>
+          <?php 
+          $query = new WP_Query(
+            ['post_type' => 'property', 'posts_per_page' => 4]
+          ); 
+          while($query->have_posts()){
+            $query->the_post();
+            get_template_part('template-parts/property'); 
+          }
+          wp_reset_postdata(); 
+          ?>
 
         <div class="highlighted">
           <img src="https://i.picsum.photos/id/234/790/728.jpg" alt="">
@@ -130,7 +86,7 @@
           </div>
         </div>
 
-        <a class="push-properties__action btn" href="#">
+        <a class="push-properties__action btn" href="<?= get_post_type_archive_link('property'); ?>">
           Parcourir nos biens
           <svg class="icon">
             <use xlink:href="sprite.14d9fd56.svg#arrow"></use>
@@ -139,26 +95,27 @@
 
       </div>
     </section>
-
+<?php endwhile; endif ?>
+<?php if (have_rows('quote')): while(have_rows('quote')): the_row() ?>
     <section class="container quote">
       <div class="quote__title">Ce que pensent nos clients</div>
       <div class="quote__body">
         <div class="quote__image">
-          <img src="quote-man.5c402ea9.png" alt="">
-          <div class="quote__author">Stephane, Agent immobilier</div>
+          <img src="<?php the_sub_field('avatar'); ?>" alt="">
+          <div class="quote__author"><? the_sub_field('job') ?></div>
         </div>
         <blockquote>
-          <p>J'ai voulu vendre mon bien et j'ai été très bien conseillé, des agents très professionnels et investis.</p>
+          <?php the_sub_field('content') ?>
         </blockquote>
       </div>
-
-      <a class="quote__action btn" href="#">
-        Estimer mon bien
-        <svg class="icon">
-          <use xlink:href="sprite.14d9fd56.svg#arrow"></use>
-        </svg>
+      <?php if ($action = get_sub_field('action')): ?>    
+      <a class="quote__action btn" href="<?= $action['url'] ?>">
+        <?= $action['title'] ?>
+        <?= agencia_icon('arrow') ?>
       </a>
+      <?php endif ?>
     </section>
+    <?php endwhile; endif ?>
 
     <!-- Read our stories -->
     <section class="container push-news">
@@ -233,5 +190,5 @@
     </section>
 
   </main>
-
+<?php endwhile ?>
 <?php get_footer(); ?>

@@ -3,8 +3,10 @@ require_once('inc/supports.php');
 require_once('inc/assets.php'); 
 require_once('inc/apparence.php'); 
 require_once('inc/menus.php'); 
+require_once('inc/style.php'); 
 require_once('inc/images.php'); 
 require_once('inc/query/posts.php'); 
+require_once('inc/query/property.php'); 
 require_once('inc/comments.php'); 
 
 function agencia_icon($name) {
